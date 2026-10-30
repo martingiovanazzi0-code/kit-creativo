@@ -1,0 +1,8 @@
+{
+  "name": "creativos",
+  "version": "1.0.0",
+  "description": "Carruseles de Instagram y presentaciones fabricados por código (HTML → PNG/PDF/PPTX) con el sistema visual de cada marca.",
+  "author": {
+    "name": "Martín Giovanazzi"
+  }
+}

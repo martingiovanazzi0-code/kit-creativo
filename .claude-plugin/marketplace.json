@@ -1,0 +1,17 @@
+{
+  "name": "skills-creativos",
+  "owner": {
+    "name": "Martín Giovanazzi"
+  },
+  "metadata": {
+    "description": "Skills del equipo para producir creativos por código: carruseles de Instagram y presentaciones.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "creativos",
+      "source": "./plugins/creativos",
+      "description": "Dos skills: carruseles (Instagram 1080×1350, sistema de datos visuales) y presentaciones (16:9 a PNG, PDF y PPTX con notas del orador). Incluye la identidad de Método FBC."
+    }
+  ]
+}

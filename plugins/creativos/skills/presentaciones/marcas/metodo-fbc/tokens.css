@@ -1,0 +1,17 @@
+/* Método FBC: paleta premium. Pegá este bloque en el :root del HTML. */
+:root{
+  --bg:#03060D;            /* fondo */
+  --card:#0C1729;          /* tarjeta */
+  --card2:#0A1224;         /* tarjeta, final del degradé */
+  --line:rgba(111,155,255,.18); /* borde de tarjeta */
+  --glow:rgba(27,52,113,.55);   /* glow zafiro */
+  --glow2:rgba(27,52,113,.28);
+  --acc:#4477DC;           /* acento medio */
+  --hi:#6F9BFF;            /* resaltado / ítem activo */
+  --t1:#FFFFFF;            /* titulares y números */
+  --t2:#9FB0CC;            /* texto secundario */
+  --gold:#F0B429;          /* SOLO comercial: CTA, precio */
+  --up:#34D399;            /* ganancia */
+  --down:#F87171;          /* pérdida */
+  --font:'Inter';
+}

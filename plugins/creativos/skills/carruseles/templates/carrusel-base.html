@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="es">
+<!--
+  PLANTILLA BASE DE CARRUSEL (1080×1350). Basada en el carrusel E de Método FBC, el que mejor rindió.
+  Cómo se usa:
+   1. Copiá este archivo a tu carpeta de trabajo como carrusel-<x>.html; las fotos van en img/.
+   2. Reemplazá el bloque :root por el tokens.css de la marca (mismas variables).
+   3. Reemplazá el contenido de cada <section class="slide">. Borrá las que no uses.
+   4. Abrilo en el navegador: sin ?s ves todas una abajo de la otra; con ?s=3 ves solo la 3.
+   5. Render: python3 <skill>/scripts/render.py carrusel-<x>.html --prefix X
+  Es un CATÁLOGO: las slides 5, 6 y 9 muestran componentes alternativos. En un carrusel real,
+  las slides de ítem usan todas el MISMO componente en el MISMO lugar.
+-->
+<head>
+<meta charset="utf-8">
+<title>Carrusel base</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=block" rel="stylesheet">
+<style>
+  /* ===== TOKENS DE MARCA (reemplazar por marcas/<marca>/tokens.css) ===== */
+  :root{
+    --bg:#03060D; --card:#0C1729; --card2:#0A1224; --line:rgba(111,155,255,.18);
+    --glow:rgba(27,52,113,.55); --glow2:rgba(27,52,113,.28); --acc:#4477DC;
+    --hi:#6F9BFF; --t1:#FFFFFF; --t2:#9FB0CC; --gold:#F0B429; --up:#34D399; --down:#F87171;
+    --font:'Inter';
+  }
+  /* ===== BASE ===== */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000;font-family:var(--font),system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{display:flex;flex-direction:column;gap:40px;align-items:center}
+  .slide{position:relative;width:1080px;height:1350px;overflow:hidden;background:var(--bg);color:var(--t1);flex:0 0 auto}
+
+  /* fondo de slides de texto: glow suave + viñeta + grano */
+  .slide.txt::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(900px 700px at 85% -10%, var(--glow), transparent 65%),
+               radial-gradient(700px 500px at 10% 110%, var(--glow2), transparent 60%), var(--bg)}
+  .slide::after{content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 220px rgba(0,0,0,.7);
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+  .label{position:absolute;top:84px;left:84px;font-size:22px;font-weight:600;letter-spacing:.32em;color:var(--hi);text-transform:uppercase}
+  .num{position:absolute;top:82px;right:84px;font-size:26px;font-weight:600;color:var(--t2);letter-spacing:.08em}
+  .body{position:absolute;left:84px;right:84px}
+  h1{font-weight:700;font-size:80px;line-height:1.08;letter-spacing:-.025em}
+  h2{font-weight:700;font-size:62px;line-height:1.1;letter-spacing:-.025em}
+  .hi{color:var(--hi)} .gold{color:var(--gold)} .blk{display:block}
+  p{font-weight:400;font-size:31px;line-height:1.42;color:var(--t2);margin-top:30px}
+  p b{color:var(--t1);font-weight:600}
+  .sub{font-size:34px;font-weight:600;color:var(--hi);margin-top:28px;letter-spacing:-.01em}
+  .foot{position:absolute;left:84px;right:84px;bottom:84px;display:flex;justify-content:space-between;align-items:center;font-size:26px;font-weight:600;color:var(--t2)}
+  .foot .cta{color:var(--t1)}
+  .card{border:1px solid var(--line);border-radius:22px;background:rgba(12,23,41,.75);padding:32px 36px}
+
+  /* ===== FOTO A SANGRE (portada y autoridad) ===== */
+  .ph{position:absolute;object-fit:cover}  /* tamaño y posición inline: width/height/left/top */
+  .shade{position:absolute;inset:0}
+  .ph-vacia{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;padding-top:260px;font-size:28px;color:rgba(159,176,204,.35);letter-spacing:.2em;text-transform:uppercase}
+  .pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
+  .pills span{font-size:24px;font-weight:600;border:1px solid rgba(111,155,255,.25);background:rgba(12,23,41,.6);border-radius:999px;padding:12px 24px}
+
+  /* ===== ÍTEM: pill + número héroe + nombre ===== */
+  .tick{display:inline-block;font-size:22px;font-weight:600;letter-spacing:.18em;color:var(--t2);border:1px solid rgba(111,155,255,.25);border-radius:999px;padding:10px 22px}
+  .amt{font-weight:800;font-size:240px;line-height:.95;letter-spacing:-.05em;margin-top:26px}
+  .amt .cur{font-size:100px;font-weight:700;color:var(--hi);letter-spacing:-.02em;margin-right:8px;vertical-align:.95em}
+  .amt .x{font-size:170px;font-weight:600;color:var(--hi);margin-right:10px;vertical-align:.1em}
+  .name{font-size:66px;font-weight:700;letter-spacing:-.02em;margin-top:14px}
+  .name span{color:var(--t2);font-weight:500}
+
+  /* gráficos anclados abajo, siempre en el mismo lugar */
+  .viz{position:absolute;left:84px;right:84px;bottom:180px;display:grid;gap:22px}
+  .vt{display:flex;justify-content:space-between;align-items:baseline;font-size:23px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--t2)}
+  .vt b{font-size:48px;letter-spacing:-.01em;color:var(--t1);text-transform:none}
+
+  /* componente: barra partida (solo el tramo actual .on) */
+  .bar{display:flex;gap:6px;height:84px;margin-top:20px}
+  .bar div{border-radius:10px;background:rgba(111,155,255,.10);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;color:rgba(159,176,204,.45)}
+  .bar div.on{background:var(--hi);color:var(--bg);font-size:30px;font-weight:800}
+
+  /* componente: tira de 12 meses */
+  .months{display:grid;grid-template-columns:repeat(12,1fr);gap:8px;margin-top:22px}
+  .months div{text-align:center;font-size:23px;font-weight:600;color:rgba(159,176,204,.5)}
+  .months div i{display:block;height:64px;border-radius:10px;margin-bottom:10px;background:rgba(111,155,255,.08);border:1px solid rgba(111,155,255,.12)}
+  .months div.on{color:var(--t1)}
+  .months div.on i{background:var(--hi);border-color:var(--hi)}
+  .cap{font-size:30px;color:var(--t2);margin-top:20px}
+
+  /* componente: tarjeta de ejemplo */
+  .ex .l{font-size:21px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--t2)}
+  .ex .v{margin-top:14px;font-size:62px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+  .ex .v small{font-size:26px;font-weight:600;color:var(--t2);margin-left:10px}
+
+  /* componente: plan agrupado */
+  .plan{display:grid;gap:18px}
+  .grp{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:10px;padding:24px 34px}
+  .grp .g{font-size:21px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--hi)}
+  .grp .r{font-size:30px;color:var(--t2);line-height:1.5}
+  .grp .r b{color:var(--t1);font-weight:700;display:inline-block;min-width:118px}
+
+  /* componente: íconos de personas (llenos vs. vacíos) */
+  .people{display:flex;gap:14px;margin-top:20px}
+  .people svg{width:56px;height:56px}
+  .people .on path{fill:var(--hi)}
+  .people .off path{fill:none;stroke:rgba(159,176,204,.35);stroke-width:1.5}
+
+  /* componente: calendario / matriz de puntos */
+  .cal{margin-top:46px;padding:26px 28px}
+  .cal .row{display:grid;grid-template-columns:250px repeat(12,1fr);align-items:center;height:78px}
+  .cal .row+.row{border-top:1px solid rgba(111,155,255,.08)}
+  .cal .n{white-space:nowrap;font-size:24px;font-weight:600}
+  .cal .n small{display:block;font-size:17px;color:var(--t2);font-weight:500;letter-spacing:.1em}
+  .cal .row span{justify-self:center;width:26px;height:26px;border-radius:50%;background:rgba(159,176,204,.12)}
+  .cal .row span.on{background:var(--hi)}
+  .cal .hd{height:46px}
+  .cal .hd span,.cal .tot span{width:auto;height:auto;background:none;font-size:19px;font-weight:600;color:var(--t2)}
+  .cal .tot{border-top:1px solid rgba(111,155,255,.3)!important}
+  .cal .tot .n,.cal .tot span{color:var(--hi);font-size:24px;font-weight:800}
+
+  /* componente: tarjeta de evento */
+  .event{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;margin-top:50px;padding:34px 40px}
+  .event .d{text-align:center;padding-right:36px;border-right:1px solid var(--line)}
+  .event .d .m{font-size:24px;font-weight:700;letter-spacing:.2em;color:var(--hi)}
+  .event .d .dd{font-size:110px;font-weight:800;line-height:1;letter-spacing:-.04em}
+  .event .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .event .chips span{font-size:24px;font-weight:600;border:1px solid rgba(111,155,255,.25);border-radius:999px;padding:10px 20px}
+  .event .h{font-size:44px;font-weight:800;margin-bottom:18px}
+
+  /* cierre */
+  .disc{margin-top:70px;padding:26px 32px}
+  .disc p{margin:0;font-size:22px;line-height:1.45}
+</style>
+</head>
+<body>
+
+<!-- 1 · HOOK: solo el hook, sin label, sin logo. Foto con el cuerpo visible. -->
+<section class="slide cover">
+  <div class="ph-vacia">img/portada.jpg</div>
+  <img class="ph" src="img/portada.jpg" alt="" style="width:1200px;height:1800px;left:0;top:-340px" onerror="this.remove()">
+  <div class="shade" style="background:linear-gradient(180deg, rgba(3,6,13,.35) 0%, rgba(3,6,13,0) 14%, rgba(3,6,13,0) 44%, rgba(3,6,13,.6) 56%, rgba(3,6,13,.96) 70%, var(--bg) 100%)"></div>
+  <div class="body" style="bottom:190px">
+    <h1>¿Querés cobrar dividendos en dólares todos los meses? <span class="hi blk">Agarrá 500 dólares<br>y hacé esto.</span></h1>
+  </div>
+  <div class="foot"><span>@handle</span><span class="cta">Deslizá →</span></div>
+</section>
+
+<!-- 2 · AUTORIDAD + PUENTE: foto en escenario a sangre + trayectoria confirmada en la ficha de la marca -->
+<section class="slide cover">
+  <div class="ph-vacia">img/autoridad.jpg</div>
+  <img class="ph" src="img/autoridad.jpg" alt="" style="width:1133px;height:1700px;left:-26px;top:-280px" onerror="this.remove()">
+  <div class="shade" style="background:linear-gradient(180deg, rgba(3,6,13,.4) 0%, rgba(3,6,13,0) 14%, rgba(3,6,13,0) 32%, rgba(3,6,13,.7) 44%, rgba(3,6,13,.97) 56%, var(--bg) 100%)"></div>
+  <div class="body" style="bottom:170px">
+    <h2 style="font-size:56px">Soy Nico y hace más de 10 años <span class="hi">estoy dentro de la industria financiera.</span></h2>
+    <p style="margin-top:20px;font-size:30px">Trabajando en instituciones como:</p>
+    <div class="pills"><span>Banco BBVA</span><span>Citibank</span><span>Binance</span><span>Mercado Libre</span></div>
+    <div class="sub" style="margin-top:36px">Con 4 empresas armás un calendario<br>que paga los 12 meses.<br>Al final te digo cómo recibirlo completo.</div>
+  </div>
+  <div class="foot"><span>@handle</span><span class="cta">Deslizá →</span></div>
+</section>
+
+<!-- 3 · ÍTEM (número héroe + barra partida + tira de meses). Duplicá esta slide para cada ítem
+     y cambiá solo: label, número, pill, monto, nombre, qué tramo y qué meses están .on -->
+<section class="slide txt">
+  <div class="label">Paso 1 de 4</div><div class="num">03</div>
+  <div class="body" style="top:200px">
+    <span class="tick">MCD · NYSE</span>
+    <div class="amt"><span class="cur">US$</span>125</div>
+    <div class="name"><span>en</span> McDonald's</div>
+  </div>
+  <div class="viz">
+    <div class="card"><div class="vt">Del capital <b>25%</b></div>
+      <div class="bar"><div class="on" style="flex:25">25%</div><div style="flex:22">22%</div><div style="flex:40">40%</div><div style="flex:13">13%</div></div></div>
+    <div class="card"><div class="vt">Cuándo paga</div>
+      <div class="months"><div><i></i>E</div><div><i></i>F</div><div class="on"><i></i>M</div><div><i></i>A</div><div><i></i>M</div><div class="on"><i></i>J</div><div><i></i>J</div><div><i></i>A</div><div class="on"><i></i>S</div><div><i></i>O</div><div><i></i>N</div><div class="on"><i></i>D</div></div>
+      <div class="cap">Paga en marzo, junio, septiembre y diciembre.</div></div>
+  </div>
+  <div class="foot"><span>@handle</span><span class="cta">Deslizá →</span></div>
+</section>
+
+<!-- 4 · ÍTEM (igual a la 3: mismo gráfico en el mismo lugar, cambia lo encendido) -->
+<section class="slide txt">
+  <div class="label">Paso 2 de 4</div><div class="num">04</div>
+  <div class="body" style="top:200px">
+    <span class="tick">PG · NYSE</span>
+    <div class="amt"><span class="cur">US$</span>110</div>
+    <div class="name"><span>en</span> Procter &amp; Gamble</div>
+  </div>
+  <div class="viz">
+    <div class="card"><div class="vt">Del capital <b>22%</b></div>
+      <div class="bar"><div style="flex:25">25%</div><div class="on" style="flex:22">22%</div><div style="flex:40">40%</div><div style="flex:13">13%</div></div></div>
+    <div class="card"><div class="vt">Cuándo paga</div>
+      <div class="months"><div><i></i>E</div><div class="on"><i></i>F</div><div><i></i>M</div><div><i></i>A</div><div class="on"><i></i>M</div><div><i></i>J</div><div><i></i>J</div><div class="on"><i></i>A</div><div><i></i>S</div><div><i></i>O</div><div class="on"><i></i>N</div><div><i></i>D</div></div>
+      <div class="cap">Paga en febrero, mayo, agosto y noviembre.</div></div>
+  </div>
+  <div class="foot"><span>@handle</span><span class="cta">Deslizá →</span></div>
+</section>
+
+<!-- 5 · CATÁLOGO: multiplicador + tarjeta de ejemplo + íconos de personas -->
+<section class="slide txt">
+  <div class="label">Cuenta 1 de 5</div><div class="num">05</div>
+  <div class="body" style="top:200px">
+    <span class="tick">TU LIBERTAD</span>
+    <div class="amt"><span class="x">×</span>150</div>
+    <div class="name">tu sueldo mensual</div>
+    <p>Es lo que necesitás invertido para vivir de las rentas.</p>
+  </div>
+  <div class="viz">
+    <div class="card ex"><div class="l">Ejemplo · con un sueldo de $1.000.000</div><div class="v">$150.000.000 <small>invertidos</small></div></div>
+    <div class="card"><div class="vt">Personas que llegan <b>1 de 5</b></div>
+      <div class="people">
+        <svg class="on" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0Z"/></svg>
+        <svg class="off" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0Z"/></svg>
+        <svg class="off" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0Z"/></svg>
+        <svg class="off" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0Z"/></svg>
+        <svg class="off" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0Z"/></svg>
+      </div></div>
+  </div>
+  <div class="foot"><span>@handle</span><span class="cta">Deslizá →</span></div>
+</section>
+
+<!-- 6 · CATÁLOGO: plan agrupado (resumen de un plan en tarjetas) -->
+<section class="slide txt">
+  <div class="label">Tu plan</div><div class="num">06</div>
+  <div class="body" style="top:200px">
+    <h2>Tu sueldo, <span class="hi blk">repartido en 3 destinos.</span></h2>
+    <div class="plan" style="margin-top:56px">
+      <div class="card grp"><div class="g">Gastar</div><div class="r"><b>70%</b> vida diaria</div></div>
+      <div class="card grp"><div class="g">Guardar</div><div class="r"><b>20%</b> inversión mensual</div></div>
+      <div class="card grp"><div class="g">Llegar</div><div class="r"><b>10%</b> fondo de emergencia</div></div>
+    </div>
+    <p>Si cobrás otro monto, <b>usá los mismos porcentajes.</b></p>
+  </div>
+  <div class="foot"><span>@handle</span><span class="cta">Deslizá →</span></div>
+</section>
+
+<!-- 7 · RESUMEN GUARDABLE: calendario de puntos + fila de totales que prueba la promesa -->
+<section class="slide txt">
+  <div class="label">Tu calendario</div><div class="num">07</div>
+  <div class="body" style="top:190px">
+    <h2 style="font-size:58px">Eso te da un cobro en dólares <span class="hi blk">los 12 meses del año.</span></h2>
+    <div class="card cal">
+      <div class="row hd"><div class="n"></div><span>E</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span>O</span><span>N</span><span>D</span></div>
+      <div class="row"><div class="n">McDonald's<small>25%</small></div><span></span><span></span><span class="on"></span><span></span><span></span><span class="on"></span><span></span><span></span><span class="on"></span><span></span><span></span><span class="on"></span></div>
+      <div class="row"><div class="n">Procter &amp; Gamble<small>22%</small></div><span></span><span class="on"></span><span></span><span></span><span class="on"></span><span></span><span></span><span class="on"></span><span></span><span></span><span class="on"></span><span></span></div>
+      <div class="row"><div class="n">Coca-Cola<small>40%</small></div><span></span><span></span><span></span><span class="on"></span><span></span><span></span><span class="on"></span><span></span><span></span><span class="on"></span><span></span><span class="on"></span></div>
+      <div class="row"><div class="n">Realty Income<small>13%</small></div><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div>
+      <div class="row tot"><div class="n">Cobros</div><span>1</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>3</span></div>
+    </div>
+    <p style="font-size:29px;margin-top:34px">Si invertís otro monto, usá los mismos porcentajes:<br><b>25% · 22% · 40% · 13%.</b></p>
+    <p style="font-size:29px;margin-top:16px">Antes de invertir en cualquiera, mirá dos cosas:<br><b>si gana plata y cuánta deuda tiene.</b></p>
+  </div>
+  <div class="foot"><span>@handle</span><span class="cta">Deslizá →</span></div>
+</section>
+
+<!-- 8 · CTA POR COMENTARIO: renglón propio, 76px, color comercial, no se achica. Bloque centrado. -->
+<section class="slide txt">
+  <div class="label">Tu calendario completo</div><div class="num">08</div>
+  <div class="body" style="top:50%;transform:translateY(-50%)">
+    <h2 style="font-size:76px;line-height:1.08"><span class="gold blk" style="font-weight:800">Comentá DIVIDENDOS</span>y te mando el calendario completo por privado.</h2>
+    <div class="card disc"><p>Esto no es una recomendación de inversión. Depende de tus objetivos, de tus ahorros y de tu factor de riesgo.</p></div>
+  </div>
+  <div class="foot"><span>@handle</span><span></span></div>
+</section>
+
+<!-- 9 · CATÁLOGO: cierre de captación a un evento (tarjeta de evento + CTA) -->
+<section class="slide txt">
+  <div class="label">Clase en vivo</div><div class="num">09</div>
+  <div class="body" style="top:50%;transform:translateY(-50%)">
+    <h2>Por eso, este domingo<br>voy a dar <span class="hi">una clase<br>en vivo y gratis.</span></h2>
+    <div class="card event">
+      <div class="d"><div class="m">DOM</div><div class="dd">25</div><div class="m">OCT</div></div>
+      <div><div class="h">19 hs (Argentina)</div><div class="chips"><span>En vivo</span><span>Gratis</span><span>No queda grabada</span></div></div>
+    </div>
+    <h2 style="font-size:64px;margin-top:60px"><span class="gold blk">Comentá MAPA</span>y te mando el link.</h2>
+  </div>
+  <div class="foot"><span>@handle</span><span></span></div>
+</section>
+
+<script>
+  // ?s=N muestra solo la slide N (así la renderiza scripts/render.py). Sin ?s, se ven todas.
+  const n = new URLSearchParams(location.search).get('s');
+  if (n) document.querySelectorAll('.slide').forEach((el, i) => { if (i + 1 != +n) el.style.display = 'none'; });
+  if (n) document.body.style.gap = '0';
+</script>
+</body>
+</html>

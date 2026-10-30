@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="es">
+<!--
+  PLANTILLA BASE DE PRESENTACIÓN (1920×1080). Sistema de la presentación de ventas de Método FBC.
+  Cómo se usa:
+   1. Copiá este archivo como deck/presentacion.html; imágenes en deck/img/.
+   2. Reemplazá el bloque :root por el tokens.css de la marca (mismas variables).
+   3. Reemplazá el contenido. Cada <section class="slide"> es una diapositiva; borrá las que no uses.
+      Las notas para quien presenta van en data-notas="…" (salen en las notas del orador del PPTX).
+   4. Abrilo en el navegador: sin ?s ves todas; con ?s=4 ves solo la 4.
+   5. Render: python3 <skill>/scripts/render.py presentacion.html --size 1920x1080 --pdf --pptx
+  Si falta una imagen, se ve un recuadro con el nombre del archivo esperado.
+-->
+<head>
+<meta charset="utf-8">
+<title>Presentación base</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=block" rel="stylesheet">
+<style>
+/* ===== TOKENS DE MARCA (reemplazar por marcas/<marca>/tokens.css) ===== */
+:root{
+  --bg:#03060D; --card:#0C1729; --card2:#0A1224; --line:rgba(111,155,255,.18);
+  --glow:rgba(27,52,113,.55); --glow2:rgba(27,52,113,.28); --acc:#4477DC;
+  --hi:#6F9BFF; --t1:#FFFFFF; --t2:#9FB0CC; --gold:#F0B429; --up:#34D399; --down:#F87171;
+  --font:'Inter';
+}
+/* ===== BASE ===== */
+@page{size:1920px 1080px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000}
+body{font-family:var(--font),Arial,sans-serif;color:var(--t1);-webkit-font-smoothing:antialiased}
+.slide{width:1920px;height:1080px;position:relative;overflow:hidden;background:var(--bg);break-after:page}
+.slide::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(1100px 700px at var(--gx,75%) var(--gy,35%),var(--glow),transparent 70%)}
+.slide::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:50;
+  background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%),
+   url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.06'/></svg>")}
+.in{position:absolute;inset:0;padding:96px 120px;z-index:2}
+.c{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 200px}
+.logo{position:absolute;top:56px;left:120px;z-index:5;font-size:22px;font-weight:800;letter-spacing:.2em;color:var(--t2)} /* reemplazá por <img class="logo" src="img/logo.png" style="height:44px"> */
+.num{position:absolute;bottom:48px;right:120px;font-size:18px;font-weight:600;color:#4b5c7a;z-index:5;letter-spacing:.08em}
+.eyebrow{font-size:22px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--hi)}
+h1{font-size:100px;font-weight:800;line-height:1.03;letter-spacing:-.02em}
+h2{font-size:62px;font-weight:800;line-height:1.06;letter-spacing:-.02em;margin-top:14px}
+.sub{font-size:32px;color:var(--t2);line-height:1.4;font-weight:500}
+.hi{color:var(--hi)} .gold{color:var(--gold)} .blk{display:block}
+.card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:28px}
+.list{display:flex;flex-direction:column;gap:22px}
+.li{display:flex;gap:20px;font-size:29px;line-height:1.35;color:#dbe4f3}
+.li b{color:#fff;font-weight:700}
+.check{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:rgba(68,119,220,.18);border:1px solid rgba(111,155,255,.45);display:flex;align-items:center;justify-content:center;margin-top:2px}
+.check::after{content:"";width:12px;height:7px;border-left:3px solid var(--hi);border-bottom:3px solid var(--hi);transform:rotate(-45deg) translate(1px,-1px)}
+.check.g{background:rgba(240,180,41,.14);border-color:rgba(240,180,41,.6)}
+.check.g::after{border-color:var(--gold)}
+.disc{font-size:19px;color:#6d7f9e;font-style:italic}
+/* imagen con recuadro de respaldo: <div class="img" data-f="img/x.jpg"><img src="img/x.jpg" onerror="this.remove()"></div> */
+.img{position:relative;overflow:hidden;background:rgba(111,155,255,.06);border:1px dashed rgba(111,155,255,.25)}
+.img::before{content:attr(data-f);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;color:rgba(159,176,204,.4);letter-spacing:.1em}
+.img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.shot{border-radius:20px;border:1px solid rgba(111,155,255,.25);box-shadow:0 40px 120px rgba(0,0,0,.6)}
+
+/* autoridad: foto lateral con fundido */
+.lado{position:absolute;left:0;top:0;width:820px;height:1080px;z-index:1;border:0;
+  -webkit-mask-image:linear-gradient(270deg,transparent 0,#000 30%);mask-image:linear-gradient(270deg,transparent 0,#000 30%)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:56px}
+.stat{padding:30px 34px}
+.stat .n{font-size:60px;font-weight:900;color:var(--hi);letter-spacing:-.02em;line-height:1}
+.stat .t{font-size:24px;color:#dbe4f3;margin-top:12px;line-height:1.35}
+
+/* equipo */
+.team{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:56px}
+.member{display:flex;gap:36px;padding:36px;align-items:flex-start}
+.member .img{width:230px;height:290px;border-radius:22px;flex:0 0 auto}
+.member .bw img{filter:grayscale(1) contrast(1.05)}
+.member h3{font-size:36px;font-weight:800;line-height:1.1}
+.member .r{font-size:22px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--hi);margin:10px 0 22px}
+.member .big{font-size:52px;font-weight:900;color:var(--hi);line-height:1;margin-bottom:6px}
+.member p{font-size:25px;line-height:1.42;color:#dbe4f3;margin-bottom:12px}
+
+/* etapas */
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:48px}
+.col{padding:34px 30px;display:flex;flex-direction:column;gap:14px;min-height:420px}
+.col .e{font-size:18px;font-weight:700;letter-spacing:.16em;color:var(--hi)}
+.col h3{font-size:42px;font-weight:900}
+.col .obj{font-size:25px;line-height:1.4;color:#dbe4f3;font-weight:500}
+.col .t{margin-top:auto;font-size:44px;font-weight:900;color:var(--hi);line-height:1}
+.col .t small{display:block;font-size:18px;font-weight:700;letter-spacing:.14em;color:var(--t2);margin-top:8px}
+.col.last{border-color:rgba(68,119,220,.6);background:linear-gradient(180deg,#10224a,var(--card2))}
+
+/* modelo: 4 pastillas */
+.pills{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:150px}
+.pill{border-radius:999px;border:1.5px solid rgba(111,155,255,.5);background:rgba(27,52,113,.35);text-align:center;padding:40px 10px;font-size:34px;font-weight:800;letter-spacing:.14em}
+.pd{text-align:center;font-size:30px;line-height:1.45;color:#dbe4f3;margin-top:30px;padding:0 14px}
+
+/* lista + captura */
+.split{display:grid;grid-template-columns:700px 1fr;gap:80px;margin-top:60px;align-items:start}
+.split .img{height:600px}
+
+/* testimonio */
+.testi{display:grid;grid-template-columns:520px 1fr;gap:90px;align-items:center;height:100%}
+.testi .img{height:760px;border-radius:28px}
+.fromto{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;margin-top:40px}
+.fromto .card{padding:26px 30px;font-size:25px;line-height:1.4;color:#dbe4f3}
+.fromto .card b{display:block;font-size:18px;letter-spacing:.16em;text-transform:uppercase;color:var(--t2);margin-bottom:8px}
+.fromto .to{border-color:rgba(68,119,220,.6)}
+.fromto .to b{color:var(--hi)}
+.fromto .ar{font-size:44px;color:var(--hi)}
+
+/* oferta */
+.offer .left{position:absolute;left:120px;top:170px;width:1060px;z-index:2}
+.offer h2{font-size:96px;font-weight:900;letter-spacing:-.03em;margin-top:0}
+.offer .bajada{font-size:24px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);margin-top:18px;line-height:1.45;max-width:980px}
+.offer .list{margin-top:44px;gap:18px}
+.offer .li{font-size:27px}
+.badge{position:absolute;right:120px;top:150px;text-align:center;padding:22px 34px;border-radius:20px;border:1px solid rgba(240,180,41,.45);background:rgba(240,180,41,.08);font-size:24px;font-weight:700;z-index:2}
+.badge b{color:var(--gold);font-size:30px}
+.price{position:absolute;right:120px;bottom:120px;width:560px;padding:44px 48px;border-radius:32px;z-index:2;
+  background:linear-gradient(180deg,#14203a,#0b1324);border:1.5px solid rgba(240,180,41,.55);box-shadow:0 0 80px rgba(240,180,41,.12)}
+.price .lab{font-size:22px;font-weight:800;letter-spacing:.16em;color:var(--gold)}
+.price .p{font-size:112px;font-weight:900;color:var(--gold);letter-spacing:-.03em;line-height:1;margin-top:8px}
+.price .p small{font-size:48px;font-weight:800;margin-right:8px}
+.price .m{font-size:26px;color:#dbe4f3;margin-top:14px}
+.price .v{font-size:20px;color:var(--t2);margin-top:22px}
+
+/* slide de precio sola */
+.pbig{width:820px;padding:56px 64px;border-radius:40px;background:linear-gradient(180deg,#14203a,#0b1324);border:2px solid rgba(240,180,41,.6);box-shadow:0 0 120px rgba(240,180,41,.16)}
+.pbig .lab{font-size:28px;font-weight:800;letter-spacing:.18em;color:var(--gold)}
+.pbig .p{font-size:190px;font-weight:900;color:var(--gold);letter-spacing:-.04em;line-height:1;margin-top:12px}
+.pbig .p small{font-size:80px;font-weight:800;margin-right:12px}
+.pbig .m{font-size:36px;color:#dbe4f3;margin-top:18px}
+.cuotas{position:relative;display:inline-block;margin-top:40px;font-size:34px;color:var(--t2);padding:10px 30px}
+.cuotas::before,.cuotas::after{content:"";position:absolute;left:-10px;right:-10px;top:50%;height:6px;background:var(--down);border-radius:3px}
+.cuotas::before{transform:rotate(14deg)} .cuotas::after{transform:rotate(-14deg)}
+
+/* bonus */
+.bn{font-size:150px;font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:2px rgba(240,180,41,.75)}
+.bl{margin-top:30px;font-size:24px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.bslide h2{font-size:96px;font-weight:900;letter-spacing:-.03em;line-height:1.05;margin-top:24px}
+.bd{font-size:40px;color:var(--t2);margin-top:30px}
+</style>
+</head>
+<body>
+
+<!-- 1 · PORTADA: la promesa en una frase -->
+<section class="slide" style="--gx:50%;--gy:60%" data-notas="Abrí con la promesa. No leas la slide: decila con tus palabras.">
+  <div class="c">
+    <div class="eyebrow" style="margin-bottom:60px">NOMBRE DE LA MARCA</div>
+    <h1>Ordená tu plata, invertí con criterio y construí <span class="hi">patrimonio</span></h1>
+    <p class="sub" style="margin-top:44px;font-size:38px">con un equipo que te acompaña paso a paso.</p>
+  </div>
+</section>
+
+<!-- 2 · AUTORIDAD: foto lateral + 4 datos duros. La bio larga va en las notas. -->
+<section class="slide" data-notas="Bio completa para contar: … (acá va el texto largo que NO va en la slide).">
+  <div class="img lado" data-f="img/figura-escenario.jpg"><img src="img/figura-escenario.jpg" alt="" onerror="this.remove()"></div>
+  <div class="logo" style="left:auto;right:120px">LOGO</div>
+  <div class="in" style="left:820px;padding-left:0;padding-top:170px">
+    <div class="eyebrow">Creador del método</div>
+    <h2 style="font-size:72px">Nombre Apellido</h2>
+    <p class="sub" style="margin-top:10px">Una frase que resume por qué sabe de esto.</p>
+    <div class="stats">
+      <div class="card stat"><div class="n">+10 años</div><div class="t">dentro del sistema financiero</div></div>
+      <div class="card stat"><div class="n">Top 1%</div><div class="t">de asesores de su banco, dos años seguidos</div></div>
+      <div class="card stat"><div class="n">+1.200</div><div class="t">alumnos acompañados</div></div>
+      <div class="card stat"><div class="n">#1</div><div class="t">en calidad de servicio de la región</div></div>
+    </div>
+  </div>
+  <div class="num">02</div>
+</section>
+
+<!-- 3 · EQUIPO: tarjetas, 1 dato grande por persona, 2 líneas como máximo -->
+<section class="slide" style="--gx:30%;--gy:20%" data-notas="Presentá a cada persona por su función en el acompañamiento.">
+  <div class="logo">LOGO</div>
+  <div class="in" style="padding-top:150px">
+    <div class="eyebrow">El equipo</div>
+    <h2>No lo hacés solo.</h2>
+    <div class="team">
+      <div class="card member"><div class="img" data-f="img/persona-1.jpg"><img src="img/persona-1.jpg" alt="" onerror="this.remove()"></div>
+        <div><h3>Persona Uno</h3><div class="r">Portfolio manager</div><div class="big">USD 1.500 M</div><p>gestionados en su trabajo actual.</p><p>Arma tu cartera desde el día 1.</p></div></div>
+      <div class="card member"><div class="img bw" data-f="img/persona-2.jpg"><img src="img/persona-2.jpg" alt="" onerror="this.remove()"></div>
+        <div><h3>Persona Dos</h3><div class="r">Coach de acompañamiento</div><div class="big">1 a 1</div><p>Una persona, no un bot.</p><p>Resuelve dudas y te hace seguimiento.</p></div></div>
+    </div>
+  </div>
+  <div class="num">03</div>
+</section>
+
+<!-- 4 · ETAPAS: nombre + objetivo principal (+ tiempo opcional). El detalle lo cuenta quien presenta. -->
+<section class="slide" style="--gx:50%;--gy:30%" data-notas="Los objetivos específicos de cada etapa se explican en vivo.">
+  <div class="logo">LOGO</div>
+  <div class="in" style="padding-top:150px">
+    <div class="eyebrow">El método</div>
+    <h2>4 etapas, <span class="hi">en orden.</span></h2>
+    <div class="cols">
+      <div class="card col"><div class="e">ETAPA 1</div><h3>Liberación</h3><div class="obj">Del caos al alivio financiero.</div><div class="t">15<small>DÍAS</small></div></div>
+      <div class="card col"><div class="e">ETAPA 2</div><h3>Orden</h3><div class="obj">Del desorden a la estabilidad.</div><div class="t">15<small>DÍAS</small></div></div>
+      <div class="card col"><div class="e">ETAPA 3</div><h3>Construcción</h3><div class="obj">De la estabilidad al ahorro real.</div><div class="t">60<small>DÍAS</small></div></div>
+      <div class="card col last"><div class="e">ETAPA 4</div><h3>Crecimiento</h3><div class="obj">Invertir con criterio propio.</div><div class="t">90<small>DÍAS</small></div></div>
+    </div>
+  </div>
+  <div class="num">04</div>
+</section>
+
+<!-- 5 · MODELO: 4 pastillas + una línea abajo de cada una -->
+<section class="slide" style="--gx:50%;--gy:55%">
+  <div class="logo">LOGO</div>
+  <div class="in" style="padding-top:150px">
+    <div class="eyebrow">Cómo lo llevamos</div>
+    <h2>Un modelo, <span class="hi">cuatro piezas.</span></h2>
+    <div class="pills">
+      <div><div class="pill">CONTENIDO</div><div class="pd">Formación por etapas, a tu ritmo.</div></div>
+      <div><div class="pill">CLASES</div><div class="pd">En vivo, con el equipo.</div></div>
+      <div><div class="pill">COMUNIDAD</div><div class="pd">Gente en el mismo camino.</div></div>
+      <div><div class="pill">CONTACTO</div><div class="pd">Seguimiento 1 a 1.</div></div>
+    </div>
+  </div>
+  <div class="num">05</div>
+</section>
+
+<!-- 6 · LISTA + CAPTURA: recursos, plataforma, comunidad -->
+<section class="slide" style="--gx:75%;--gy:55%">
+  <div class="logo">LOGO</div>
+  <div class="in" style="padding-top:150px">
+    <div class="eyebrow">Recursos</div>
+    <h2>Herramientas <span class="hi">listas para usar.</span></h2>
+    <div class="split">
+      <div class="list">
+        <div class="li"><span class="check"></span><span><b>Planilla de presupuesto</b> para ver a dónde va tu plata.</span></div>
+        <div class="li"><span class="check"></span><span><b>Planilla de patrimonio</b> para medir cuánto crecés.</span></div>
+        <div class="li"><span class="check"></span><span><b>Noticias semanales</b> sin buscar en mil lados.</span></div>
+        <div class="li"><span class="check"></span><span><b>Clases grabadas</b> desde el primer día.</span></div>
+      </div>
+      <div class="img shot" data-f="img/captura-recursos.png"><img src="img/captura-recursos.png" alt="" onerror="this.remove()" style="object-fit:contain;object-position:top"></div>
+    </div>
+  </div>
+  <div class="num">06</div>
+</section>
+
+<!-- 7 · TESTIMONIO: foto con el alumno + recorrido (entró con → logró). Nada de capturas de chat. -->
+<section class="slide" style="--gx:30%;--gy:55%" data-notas="Elegí el caso que más se parece a quien tenés enfrente (están ordenados por perfil).">
+  <div class="logo">LOGO</div>
+  <div class="in" style="padding-top:110px">
+    <div class="testi">
+      <div class="img" data-f="img/testimonio-1.jpg"><img src="img/testimonio-1.jpg" alt="" onerror="this.remove()"></div>
+      <div>
+        <div class="eyebrow">Caso real · perfil: empleado que ahorra todos los meses</div>
+        <h2 style="font-size:72px">Nombre, 45 años</h2>
+        <div class="fromto">
+          <div class="card"><b>Entró con</b>Ahorros en una caja de ahorro y miedo a perderlos.</div>
+          <div class="ar">→</div>
+          <div class="card to"><b>Logró</b>Su primera cartera, armada con criterio propio.</div>
+        </div>
+        <p class="disc" style="margin-top:40px">Rendimientos pasados no garantizan resultados futuros.</p>
+      </div>
+    </div>
+  </div>
+  <div class="num">07</div>
+</section>
+
+<!-- 8 · OFERTA: entregables de mayor a menor + precio en tarjeta (siempre DESPUÉS de los entregables) -->
+<section class="slide offer" style="--gx:85%;--gy:60%" data-notas="Recorré los entregables de arriba hacia abajo. El precio, al final.">
+  <div class="logo">LOGO</div>
+  <div class="left">
+    <h2>Programa Master</h2>
+    <div class="bajada">La formación completa con acompañamiento 1 a 1 durante 6 meses</div>
+    <div class="list">
+      <div class="li"><span class="check"></span><span><b>+20 horas de formación</b> en 4 etapas</span></div>
+      <div class="li"><span class="check"></span><span><b>Clases en vivo semanales</b> con el equipo</span></div>
+      <div class="li"><span class="check"></span><span><b>Seguimiento 1 a 1</b> dentro de la plataforma</span></div>
+      <div class="li"><span class="check"></span><span><b>Todas las clases grabadas</b>, las anteriores y las futuras</span></div>
+      <div class="li"><span class="check"></span><span><b>Actualizaciones permanentes</b> del programa</span></div>
+      <div class="li"><span class="check g"></span><span><b class="gold">Diferencial del plan</b> marcado en dorado</span></div>
+    </div>
+  </div>
+  <div class="badge">Calificación <b>4,8/5</b></div>
+  <div class="price">
+    <div class="lab">PAGO ÚNICO</div>
+    <div class="p"><small>US$</small>0.000</div>
+    <div class="m">≈ US$000 por mes</div>
+    <div class="v">Precio válido solo en esta llamada.</div>
+  </div>
+  <div class="num">08</div>
+</section>
+
+<!-- 9 · PRECIO SOLO: pago único + mensual; las cuotas tachadas con una X roja -->
+<section class="slide" style="--gx:50%;--gy:55%">
+  <div class="logo">LOGO</div>
+  <div class="c">
+    <div class="eyebrow">Tu inversión</div>
+    <h2 style="font-size:96px;margin:14px 0 50px">Programa Master</h2>
+    <div class="pbig">
+      <div class="lab">PAGO ÚNICO</div>
+      <div class="p"><small>US$</small>0.000</div>
+      <div class="m">≈ US$000 por mes</div>
+    </div>
+    <div class="cuotas">o 6 cuotas de US$000</div>
+  </div>
+  <div class="num">09</div>
+</section>
+
+<!-- 10 · BONUS: uno por slide, número fantasma en dorado -->
+<section class="slide bslide" style="--gx:50%;--gy:50%">
+  <div class="logo">LOGO</div>
+  <div class="c">
+    <div class="bn">01</div>
+    <div class="bl">Bonus · solo hoy</div>
+    <h2>Nombre del bonus</h2>
+    <div class="bd">Qué te llevás, en una línea.</div>
+  </div>
+  <div class="num">10</div>
+</section>
+
+<!-- 11 · CIERRE / POR QUÉ AHORA -->
+<section class="slide" style="--gx:50%;--gy:50%">
+  <div class="logo">LOGO</div>
+  <div class="c">
+    <h1>Estos bonus son exclusivos <span class="gold blk">de esta llamada.</span></h1>
+    <p class="sub" style="margin-top:56px;font-size:40px">¿Arrancamos?</p>
+  </div>
+  <div class="num">11</div>
+</section>
+
+<script>
+// ?s=N muestra solo la slide N (así la renderiza scripts/render.py). Sin ?s, se ven todas (PDF).
+const n = new URLSearchParams(location.search).get('s');
+if (n) { document.querySelectorAll('.slide').forEach((el, i) => { if (i + 1 != +n) el.style.display = 'none'; }); document.body.style.background = 'var(--bg)'; }
+</script>
+</body>
+</html>
