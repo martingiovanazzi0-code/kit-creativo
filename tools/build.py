@@ -5,7 +5,7 @@ Correlo cada vez que cambies algo en compartido/ (el render o una marca), antes 
   python3 tools/build.py
 
 Qué hace:
-  1. Copia compartido/render.py → plugins/creativos/skills/<skill>/scripts/render.py
+  1. Copia compartido/*.py      → plugins/creativos/skills/<skill>/scripts/ (render, aplanar_foto)
   2. Copia compartido/marcas/   → plugins/creativos/skills/<skill>/marcas/
   3. Arma dist/<skill>.zip (la carpeta de la skill, lista para subir en claude.ai → Skills)
 Cada skill queda autocontenida: funciona igual instalada como plugin o subida sola.
@@ -24,7 +24,8 @@ def main():
     DIST.mkdir(exist_ok=True)
     for skill in sorted(p for p in SKILLS.iterdir() if (p / "SKILL.md").exists()):
         (skill / "scripts").mkdir(exist_ok=True)
-        shutil.copy2(COMPARTIDO / "render.py", skill / "scripts" / "render.py")
+        for script in COMPARTIDO.glob("*.py"):
+            shutil.copy2(script, skill / "scripts" / script.name)
         if (skill / "marcas").exists():
             shutil.rmtree(skill / "marcas")
         shutil.copytree(COMPARTIDO / "marcas", skill / "marcas")

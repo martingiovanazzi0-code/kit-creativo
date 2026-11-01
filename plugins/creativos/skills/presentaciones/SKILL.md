@@ -1,6 +1,6 @@
 ---
 name: presentaciones
-description: Arma presentaciones 16:9 (1920×1080) en HTML y las exporta a PNG, PDF y PPTX con notas del orador, con el sistema visual de cada marca. Pensada para presentaciones de ventas que usan closers en llamada, slides de webinar o clase en vivo, y decks de oferta (programas, precios, bonus). Usala cuando pidan una presentación, un deck, diapositivas, slides para una llamada o un webinar, pasar un Miro/documento a slides, o retocar/re-exportar un deck ya hecho.
+description: Arma presentaciones 16:9 (1920×1080) en HTML y las exporta a PNG, PDF y PPTX con notas del orador, con el sistema visual de cada marca. Pensada para presentaciones de ventas que usan closers en llamada, decks de oferta (programas, precios, bonus) y clases. Usala cuando pidan una presentación, un deck, diapositivas, slides para una llamada, pasar un Miro/documento a slides, o retocar/re-exportar un deck ya hecho. Para slides narradas de un VSL o un webinar (guion dicho frase por frase) usá la skill vsl-chat.
 ---
 
 # Presentaciones
@@ -8,6 +8,10 @@ description: Arma presentaciones 16:9 (1920×1080) en HTML y las exporta a PNG, 
 Fabricás el deck **por código**: un HTML con una `<section class="slide">` por diapositiva,
 exportado con Chrome a PNG, PDF y PPTX. La fuente editable es siempre el HTML; el PPTX lleva
 cada slide como imagen y las notas para quien presenta en las notas del orador.
+
+**¿Es un VSL o un webinar con guion narrado?** Entonces no es esta skill: usá `vsl-chat`
+(narrado frase por frase, muchas slides, sin bullets). Esta es para decks de closer, oferta
+y clases, con el estándar "tope de gama".
 
 ## Antes de producir: leé esto
 
