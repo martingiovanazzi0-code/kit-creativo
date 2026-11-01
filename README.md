@@ -1,4 +1,4 @@
-# Skills creativos del equipo
+# Kit creativo
 
 Tres skills de Claude para producir creativos **por código** con el sistema visual de cada marca:
 
@@ -17,20 +17,17 @@ plantilla para sumar otras marcas.
 
 ### Opción A · Claude Code (recomendada)
 
-Requisito: que Martín te haya sumado como colaborador del repo (es privado) y que tu git
-tenga acceso a GitHub (por ejemplo, con `gh auth login`).
-
 En Claude Code (terminal, app de escritorio o VS Code), escribí:
 
 ```
-/plugin marketplace add martingiovanazzi0-code/skills-creativos
-/plugin install creativos@skills-creativos
+/plugin marketplace add martingiovanazzi0-code/kit-creativo
+/plugin install creativos@kit-creativo
 ```
 
 Reiniciá la sesión. Para traer las mejoras que se vayan subiendo:
 
 ```
-/plugin marketplace update skills-creativos
+/plugin marketplace update kit-creativo
 ```
 
 ### Opción B · Claude en la web o en la app de escritorio (chat)
@@ -80,7 +77,7 @@ venta, la oferta vigente (precios, planes, bonus). Nada de eso está en este rep
 2. Completá `marca.md` y armá un `tokens.css` con las mismas variables que el de `metodo-fbc`
    (así las plantillas funcionan sin tocarlas). Sumá el logo.
 3. Corré `python3 tools/build.py` (copia las marcas dentro de cada skill y regenera los zips).
-4. Commit + push. El equipo actualiza con `/plugin marketplace update skills-creativos`.
+4. Commit + push. El equipo actualiza con `/plugin marketplace update kit-creativo`.
 
 Hoy solo está cargada **Método FBC**. Sin Límites falta: no hay paleta ni tipografía
 documentadas todavía.

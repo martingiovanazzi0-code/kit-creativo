@@ -1,10 +1,10 @@
 {
-  "name": "skills-creativos",
+  "name": "kit-creativo",
   "owner": {
     "name": "Martín Giovanazzi"
   },
   "metadata": {
-    "description": "Skills del equipo para producir creativos por código: carruseles de Instagram y presentaciones.",
+    "description": "Kit para producir creativos por código con Claude: carruseles de Instagram, presentaciones y slides narradas de VSL.",
     "version": "1.1.0"
   },
   "plugins": [
